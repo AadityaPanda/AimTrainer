@@ -10,14 +10,15 @@ WHITE = (255, 255, 255)
 RED = (255, 0, 0)
 BLUE = (0, 0, 255)
 YELLOW = (255, 211, 67)
-GREEN = (124, 252, 0)
+GREEN = (0, 100, 0)
 DEEPSKYEBLUE = (0, 191, 255)
 DARKBLUE = (0, 0, 40)
 
-WINDOWHEIGHT = 1080
-WINDOWWIDTH = 1920
+WINDOWHEIGHT = 720
+WINDOWWIDTH = 1280
 
 FONT = pygame.font.SysFont(None, 48)
+
 
 def terminate():
     pygame.quit()
@@ -33,10 +34,11 @@ def Menu():
         nameRects = []
         difficultyRects = []
 
-        nameRects.append(pygame.Rect(700, 970, 463, 60))
-        difficultyRects.append(pygame.Rect(550, 570, 240, 100))
-        difficultyRects.append(pygame.Rect(815, 570, 240, 100))
-        difficultyRects.append(pygame.Rect(1080, 570, 240, 100))
+        nameRects.append(pygame.Rect(70, 630, 463, 60))
+        nameRects.append(pygame.Rect(20, 130, 1240, 20))
+        difficultyRects.append(pygame.Rect(255, 370, 240, 100))
+        difficultyRects.append(pygame.Rect(520, 370, 240, 100))
+        difficultyRects.append(pygame.Rect(785, 370, 240, 100))
         for event in pygame.event.get():
             if event.type == QUIT:
                 terminate()
@@ -54,11 +56,11 @@ def Menu():
             pygame.draw.rect(windowSurface, RED, rect)
         for rect in nameRects:
             pygame.draw.rect(windowSurface, DEEPSKYEBLUE, rect)
-        drawText("WELCOME TO AIM TRAINER!", windowSurface, 400, 200, pygame.font.SysFont(None, 112), YELLOW)
-        drawText("PICK A DIFFICULTY", windowSurface, 620, 400, pygame.font.SysFont(None, 100), color)
-        drawText("Easy", windowSurface, 637, 600, FONT, BLACK)
-        drawText("Medium", windowSurface, 872, 600, FONT, BLACK)
-        drawText("Hard", windowSurface, 1160, 600, FONT, BLACK)
+        drawText("WELCOME TO AIM TRAINER", windowSurface, 20, 60, pygame.font.SysFont(None, 112, True, True), YELLOW)
+        drawText("PICK A DIFFICULTY", windowSurface, 345, 260, pygame.font.SysFont(None, 95), color)
+        drawText("EASY", windowSurface, 332, 400, FONT, WHITE)
+        drawText("MEDIUM", windowSurface, 575, 400, FONT, WHITE)
+        drawText("HARD", windowSurface, 855, 400, FONT, WHITE)
         mainClock.tick(50)
         timer += 1
         if timer % 100 == 0:
@@ -82,10 +84,10 @@ def gameOver(totalShots, hitShots, difficulty, score):
     else:
         accuracy = 0
     windowSurface.fill(DARKBLUE)
-    drawText("GAME OVER", windowSurface, 720, 325, pygame.font.SysFont(None, 95, True))
-    drawText("Click anywhere to restart", windowSurface, 750, 1050)
-    drawText("Accuracy: " + str(accuracy) + "%", windowSurface, 840, 435)
-    drawText("Score: " + str(score), windowSurface, 880, 470)
+    drawText("GAME OVER", windowSurface, 420, 125, pygame.font.SysFont(None, 95, True))
+    drawText("Click anywhere to restart", windowSurface, 500, 650, pygame.font.SysFont(None, 30, True))
+    drawText("Accuracy: " + str(accuracy) + "%", windowSurface, 540, 235)
+    drawText("Score: " + str(score), windowSurface, 580, 270)
     pygame.display.update()
     while True:
         for event in pygame.event.get():
@@ -102,11 +104,11 @@ def populateConfig(difficulty):
     global targetImage, difficultyFile
     targetImage = pygame.image.load("targetblue.jpg")
     config = {}
-    if (difficulty == "easy"):
+    if difficulty == "easy":
         difficultyFile = open("easy.txt", "r")
-    elif (difficulty == "medium"):
+    elif difficulty == "medium":
         difficultyFile = open("medium.txt", "r")
-    elif (difficulty == "hard"):
+    elif difficulty == "hard":
         difficultyFile = open("hard.txt", "r")
     for line in difficultyFile:
         splitLine = line.split(":")
@@ -124,7 +126,7 @@ pygame.display.set_caption("sniper")
 shootSound = pygame.mixer.Sound("snipersound.wav")
 hitSound = pygame.mixer.Sound("metalHit.wav")
 shootSound.set_volume(0.1)
-hitSound.set_volume(0.4)
+hitSound.set_volume(0.1)
 
 enemies = []
 
@@ -147,16 +149,16 @@ def game(difficulty):
     STARTINGTIME = config.get("time")
     CIRCLERADIUS = 150
     while True:
-        if (config.get("time") <= 0):
+        if config.get("time") <= 0:
             gameOver(totalShots, hitShots, difficulty, score)
         tickCounter += 1
-        if (tickCounter % FPS == 0):
+        if tickCounter % FPS == 0:
             config["time"] -= 1
         windowSurface.fill(WHITE)
 
-        if (amountOfEnemies == 0):
+        if amountOfEnemies == 0:
             config["time"] = STARTINGTIME
-            while (amountOfEnemies != config.get("maxAmountOfEnemies")):
+            while amountOfEnemies != config.get("maxAmountOfEnemies"):
                 enemies.append(pygame.Rect((random.randint(0, WINDOWWIDTH - config.get("enemySize"))),
                                            (random.randint(0, WINDOWHEIGHT - config.get("enemySize"))),
                                            config.get("enemySize"), config.get("enemySize")))
@@ -186,17 +188,14 @@ def game(difficulty):
                         amountOfEnemies -= 1
                         score += 1
                         hitShots += 1
-
-        pygame.draw.circle(windowSurface, WHITE, (mouseX, mouseY),
-                           CIRCLERADIUS, 0)
         for enemy in enemies:
             windowSurface.blit(targetImage, enemy)
-        pygame.draw.circle(windowSurface, BLACK, (mouseX, mouseY),
+        pygame.draw.circle(windowSurface, GREEN, (mouseX, mouseY),
                            CIRCLERADIUS + 1, 3)
-        pygame.draw.line(windowSurface, BLACK, (mouseX, mouseY + 150),
-                         (mouseX, mouseY - 150), 2)
-        pygame.draw.line(windowSurface, BLACK, (mouseX + 150, mouseY),
-                         (mouseX - 150, mouseY), 2)
+        pygame.draw.line(windowSurface, GREEN, (mouseX, mouseY + 50),
+                         (mouseX, mouseY - 50), 2)
+        pygame.draw.line(windowSurface, GREEN, (mouseX + 50, mouseY),
+                         (mouseX - 50, mouseY), 2)
         drawText("Time: " + str(config.get("time")), windowSurface, 8, 8)
         drawText("Score: " + str(score), windowSurface, 8, 38)
         pygame.display.update()
