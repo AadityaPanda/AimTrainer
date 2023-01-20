@@ -1,0 +1,1 @@
+Here you can learn how to make a 'Gridshot' like task in this project using Python. You might have to adjust the WINDOWHEIGHT and WINDOWWIDTH of the project according to your device, so adjust carefully. It won't be hard to change the dimensions and positions of certain boxes and labels present on the main menu of the project. GOOD LUCK!!!
