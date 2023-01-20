@@ -1,0 +1,3 @@
+time:6
+maxAmountOfEnemies:3
+enemySize:40
