@@ -1,3 +1,0 @@
-time:6
-maxAmountOfEnemies:5
-enemySize:20
